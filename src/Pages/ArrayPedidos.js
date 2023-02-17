@@ -1,0 +1,27 @@
+import xburguer from '../assets/xburguer.svg'
+
+
+const Produto = [
+    {
+        id: 0,
+        Imagen : xburguer,
+        Nome: 'X-Burguer',
+        Preço: 14.00,
+        Recheio:  ['Hamburguer Tradicional', 'Queijo Prato', 'Creme de milho' ,' Tomate', 'Maionese da Casa'],
+     
+    },
+    
+    {
+        id: 1,
+        Imagen : xburguer,
+        Nome: 'X-Bacon',
+        Preço: 14.00,
+        Recheio: ['Hamburguer Tradicional', 'Bacon', 'Queijo Prato ','Creme de milho' ,'Alface', ' Tomate', 'Maionese da Casa'] ,
+        
+    }
+]
+
+
+
+
+export default Produto;
