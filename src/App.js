@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter} from "react-router-dom";
 import {Pedido, Carrinho} from './Pages/Pedidos';
 import Produto from './Pages/ArrayPedidos';
 import { CartProvider } from './Pages/CarrinhoContext/cartContex';

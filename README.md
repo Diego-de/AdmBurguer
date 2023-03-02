@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+        if (alreadyItem) {
+            const newItem = cart.map((item) => {
+                if (item.Id === id && Rech.length === recheio.length) ({
+                    ...item,
+                    quantity: item.quantity++
+
+                });
+                return item;
+            });
+            setCart(newItem)
+            return;
+        }
 ## Available Scripts
 
 In the project directory, you can run:
