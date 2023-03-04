@@ -6,7 +6,7 @@ const Produto = [
         Imagen : xburguer,
         Nome: 'X-Burguer',
         Preço: 14.00,
-        Recheio:  ['Hamburguer Tradicional', 'Queijo Prato', 'Creme de milho' ,' Tomate', 'Maionese da Casa'],
+        Recheio: ['Hamburguer Tradicional', 'Queijo Prato', 'Creme de milho' ,' Tomate', 'Maionese da Casa'],
         quantity:1
      
     },

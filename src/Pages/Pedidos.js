@@ -1,16 +1,18 @@
 import "./pedido.css";
 import React from "react";
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import logo from '../assets/logo.svg'
 import Produto from "./ArrayPedidos";
 import { CartContext } from "./CarrinhoContext/cartContex";
-import { useStoreState } from 'easy-peasy';
+
 
 //<LinkScroll className="btn1" to="opt2" spy={true} smooth={true} offset={50} duration={500} >Test</LinkScroll>
 //   Produto.map((projeto, index) => <Pedido key={index} produto={projeto} /> )
 
-
 const Pedido = () => {
+
+
+    const ref = useRef(null);
     const [cart, setCart] = useContext(CartContext)
 
 
@@ -18,8 +20,9 @@ const Pedido = () => {
 
     const [checkbox, setCheckbox] = useState([]);
     const [Rech, SetRech] = useState([]);
-    const [checkedState, setCheckedState] = useState([]);
+    const [isChecked, setIsChecked] = useState([]);
     //------------------------------------------------------------------
+
 
     //Atribuindo a quentidade
     const [Contador, setContador] = useState(1);
@@ -51,26 +54,27 @@ const Pedido = () => {
         setDisplay(current => !current);
     }
 
-    const salvarCheckbox = (valor, position) => {
+    const length = Produto.map(v =>{
+        return v.Recheio
+    });
 
-        const updatedCheckedState = checkedState.map((item, index) =>
-        index === position ? !item : item
-      );
-      console.log("chekced is: ", updatedCheckedState)
+    const salvarCheckbox = (valor, index) => {  
+        setIsChecked(length[hamId].length)
 
-      setCheckedState([updatedCheckedState]);
+        let checked = document.getElementById('checkbox').checked;
 
-      console.log("chekced is: ", checkedState)
 
-      
+        console.log("id: ", checked, 'index :', index, ' cont: ', Contador)
+  
+
+        
         if (checkbox.includes(valor)) {
-            setCheckbox(checkbox.filter((valores) => valores !== checkbox))
+            setCheckbox(checkbox.filter((valores) => valores !== checkbox && checked[index] === true ))
         } else {
-            setCheckbox([...checkbox, valor])
+             setCheckbox([...checkbox, valor]) 
         }
 
     }
-
 
 
 
@@ -98,7 +102,9 @@ const Pedido = () => {
             }
         }
 
-        setCart([...cart, hamburguer])
+        const newItem = [...cart, hamburguer]
+        setCart(newItem)
+
     }
 
 
@@ -112,6 +118,7 @@ const Pedido = () => {
             <div className="menu">
                 <h1>Menu</h1>
                 {Produto.map((hamburguer, index) =>
+
 
                     <div key={index} >
                         <React.Fragment key={hamburguer.id}>
@@ -129,7 +136,7 @@ const Pedido = () => {
 
                                             {hamburguer.Recheio.map((recheio, index) =>
                                                 <div className='labels' key={index}>
-                                                    <label><input type="checkbox" name="Recheio" checked={checkedState[index]} onChange={() => salvarCheckbox(recheio,index)} />{recheio}</label>
+                                                    <label><input type="checkbox" ref={ref} id="checkbox" name={recheio} key={index} onChange={() => salvarCheckbox(recheio, index)} />{recheio}</label>
                                                 </div>
                                             )}
 
