@@ -1,10 +1,10 @@
 import "./pedido.css";
 import React from "react";
-import { useState, useContext, useRef } from 'react';
+import { useState, useContext } from 'react';
 import logo from '../assets/logo.svg'
 import Produto from "./ArrayPedidos";
 import { CartContext } from "./CarrinhoContext/cartContex";
-
+import { v4 as uuidv4 } from 'uuid';
 
 const Pedido = () => {
   const [cart, setCart] = useContext(CartContext)
@@ -12,8 +12,6 @@ const Pedido = () => {
 
   //PEGANDO RECHEIO ATRIBUINDO NO UseStore do EASY-PEASY
   const [isChecked, setIsChecked] = useState([]);
-  const [indexC , setIndex] = useState ();
-  //------------------------------------------------------------------
 
 
   //Atribuindo a quentidade
@@ -42,38 +40,30 @@ const Pedido = () => {
   const showhiden = (id) => {
     setContador(0);
     setHambId(id);
+    setIsChecked([])
     setDisplay(current => !current);
   }
 
 
 
 
-  const handleSave = (dataName, dataImage, recheio,indexCheckbox, preço, id, quantidade) => {
+  const handleSave = (dataName, dataImage, recheio, preço, idHamburguer, quantidade) => {
 
-  
-    const hamburguer = {Index: indexCheckbox , Nome: dataName, Imagen: dataImage, Recheios: recheio, price: preço, quantity: quantidade, Id: id}
-    const alreadyItem = cart.find(item => item.Id === id);
-    const existingItem = cart.find(item => item.Recheios === recheio);
-    
-    if (alreadyItem) {
-      if (existingItem) {
-          const newItem = cart.map((item) => {
-            if (item.Id === id && item.Recheios === recheio){
-              return {
-                ...item,
-                quantity: item.quantity + 1,
-              };
-            }
-              return item; 
-          });
-          setCart(newItem)
-          return;
-        }
+    const combinacao = dataName + ' com ' + recheio;
+    const hamburguer = {Id: idHamburguer, itemId : uuidv4(), Nome:dataName, Imagen: dataImage, Recheios: recheio,combinacao, price: preço, quantity: quantidade };
+    const itemIndex = cart.findIndex(item => item.combinacao === combinacao);
 
-      }
-        setCart([...cart, hamburguer])
+    if (itemIndex > -1) {
+      const newItem = [...cart];
+      newItem[itemIndex].quantity += 1;
+      setCart(newItem);
+    } else {
+      setCart([...cart, hamburguer]);
+    }
 
-  }
+  };
+
+
 
 
 
@@ -107,7 +97,6 @@ const Pedido = () => {
                           <label>
                             <input type="checkbox" id="checkbox" name={recheio} key={index} onChange={(event) => {
                               if (event.target.checked) {
-                                setIndex(index)
                                 setIsChecked([...isChecked, recheio]);
                               } else {
                                 setIsChecked(
@@ -125,7 +114,7 @@ const Pedido = () => {
                       </div>
 
                       <div className='btn2' >
-                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, indexC, hamburguer.Preço, hamburguer.id, hamburguer.quantity)} >Guardar</button></div>
+                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, hamburguer.Preço, hamburguer.id, hamburguer.quantity)} >Guardar</button></div>
                       </div>
                     </div>
                   </div>
