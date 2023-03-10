@@ -15,13 +15,16 @@ const Pedido = () => {
 
 
   //Atribuindo a quentidade
-  const [Contador, setContador] = useState(1);
+
   //----------------------------------------------
 
   //Verifica se as opçoes de recheio esta visivel ou nao e atribui o Id para fazer a condicional
-  const [display, setDisplay] = useState(false);
-  const [hamId, setHambId] = useState();
+  const [openMenus, setOpenMenus] = useState({});
+
+
   //--------------------------------------------------
+  const [Contador, setContador] = useState(1);
+
   const sum = () => {
     setContador(Contador + 1);
   }
@@ -33,16 +36,16 @@ const Pedido = () => {
     }
   }
 
-
-
-
-
-  const showhiden = (id) => {
+  const handleToggleMenu = (hambId) => {
     setContador(0);
-    setHambId(id);
     setIsChecked([])
-    setDisplay(current => !current);
+    setOpenMenus(prevOpenMenus => {
+      const isOpen = prevOpenMenus[hambId];
+      return { ...prevOpenMenus, [hambId]: !isOpen };
+    });
   }
+
+
 
 
 
@@ -50,12 +53,12 @@ const Pedido = () => {
   const handleSave = (dataName, dataImage, recheio, preço, idHamburguer, quantidade) => {
 
     const combinacao = dataName + ' com ' + recheio;
-    const hamburguer = {Id: idHamburguer, itemId : uuidv4(), Nome:dataName, Imagen: dataImage, Recheios: recheio,combinacao, price: preço, quantity: quantidade };
+    const hamburguer = { Id: idHamburguer, itemId: uuidv4(), Nome: dataName, Imagen: dataImage, Recheios: recheio, combinacao, price: preço, quantity: quantidade };
     const itemIndex = cart.findIndex(item => item.combinacao === combinacao);
 
     if (itemIndex > -1) {
       const newItem = [...cart];
-      newItem[itemIndex].quantity += 1;
+      newItem[itemIndex].quantity +=  quantidade ;
       setCart(newItem);
     } else {
       setCart([...cart, hamburguer]);
@@ -84,18 +87,18 @@ const Pedido = () => {
               <div className="Burguers">
                 <div className="icon"><img src={hamburguer.Imagen}></img></div>
                 <div className="nameHamb"><h2>{hamburguer.Nome}</h2></div>
-                <div key={index}> <button onClick={() => showhiden(hamburguer.id)} className="btn">Opções:</button></div>
+                <div key={index}> <button onClick={() => handleToggleMenu(hamburguer.id)} className="btn">Opções:</button></div>
               </div>
 
               <div>
-                {display && hamburguer.id === hamId &&
+                {openMenus[hamburguer.id] &&
                   <div className="overlay">
                     <div className="inp">
 
                       {hamburguer.Recheio.map((recheio, index) =>
                         <div className='labels' key={index}>
                           <label>
-                            <input type="checkbox" id="checkbox" name={recheio} key={index} onChange={(event) => {
+                            <input type="checkbox" id="checkbox" checked={isChecked.includes(recheio)} name={recheio} key={index} onChange={(event) => {
                               if (event.target.checked) {
                                 setIsChecked([...isChecked, recheio]);
                               } else {
@@ -109,12 +112,12 @@ const Pedido = () => {
 
                       <div className='cont'>
                         <div><button style={{ backgroundColor: '#51E938' }} onClick={sum} >+</button></div>
-                        <div><input type='text' value={Contador} /></div>
+                        <div><input type='text' id="quantity" value={Contador} /></div>
                         <div><button style={{ backgroundColor: 'red' }} onClick={sub}  >-</button></div>
                       </div>
 
                       <div className='btn2' >
-                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, hamburguer.Preço, hamburguer.id, hamburguer.quantity)} >Guardar</button></div>
+                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, hamburguer.Preço, hamburguer.id, parseInt(document.getElementById('quantity').value, 10) || 1)} >Guardar</button></div>
                       </div>
                     </div>
                   </div>
