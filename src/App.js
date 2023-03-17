@@ -9,7 +9,7 @@ function App() {
     <>
     <CartProvider>
       <BrowserRouter >
-      <div style={{display:'flex', justifyContent:'space-between', backgroundColor:'#C78E31'}}>
+      <div style={{display:'flex', justifyContent:'space-between', backgroundColor:'#DEF0E2'}}>
           <div style={{width:'60%'}}><Pedido produto={Produto} /></div>
           <div style={{width:'39%'}}><Carrinho/></div>
       </div>   

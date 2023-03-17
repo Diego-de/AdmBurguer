@@ -5,6 +5,7 @@ import logo from '../assets/logo.svg'
 import Produto from "./ArrayPedidos";
 import { CartContext } from "./CarrinhoContext/cartContex";
 import { v4 as uuidv4 } from 'uuid';
+import { textAlign } from "@mui/system";
 
 const Pedido = () => {
   const [cart, setCart] = useContext(CartContext)
@@ -12,7 +13,6 @@ const Pedido = () => {
 
   //PEGANDO RECHEIO ATRIBUINDO NO UseStore do EASY-PEASY
   const [isChecked, setIsChecked] = useState([]);
-
 
   //Atribuindo a quentidade
 
@@ -58,11 +58,12 @@ const Pedido = () => {
 
     if (itemIndex > -1) {
       const newItem = [...cart];
-      newItem[itemIndex].quantity +=  quantidade ;
+      newItem[itemIndex].quantity += quantidade;
       setCart(newItem);
     } else {
       setCart([...cart, hamburguer]);
     }
+
 
   };
 
@@ -138,34 +139,81 @@ const Pedido = () => {
 
 const Carrinho = () => {
 
-  const [cart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
+  const [openMenus, setOpenMenus] = useState({});
 
   const totalPrice = cart.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0);
+
+  const handleToggleMenu = (hambId) => {
+    setOpenMenus(prevOpenMenus => {
+      const isOpen = prevOpenMenus[hambId];
+      return { ...prevOpenMenus, [hambId]: !isOpen };
+    });
+  }
+
+  const handleDeleteItem = (itemId) => {
+    const index = cart.findIndex(item => item.itemId === itemId);
+    const item = cart[index];
+
+
+    if (item && item.quantity > 1) {
+      const newItem = [...cart];
+      newItem[index] = { ...item, quantity: item.quantity - 1 };
+      setCart(newItem);
+    } else {
+      const newCart = cart.filter(item => item.itemId !== itemId);
+      setCart(newCart);
+    }
+  }
+
+  const removeAll = () => {
+    setCart([]);
+  }
+
 
 
   return (
     <div className="container" id="opt2">
       <div className="menu2">
         <h1>Relatório</h1>
-        <h2>price: {totalPrice}</h2>
+        <div className="BurguerCart" >
         {cart.map((item, index) =>
-          <div className="Burguers" key={index}>
-            <div className="icon"><img src={item.Imagen}></img></div>
-            <div className="nameHamb"><h2>{item.Nome}</h2></div>
-            {item.Recheios.map(iten =>
-              <div>
-                <p>{iten + ' '}</p>
-              </div>
-            )}
-            <p>{item.quantity}</p>
+          <div className="cartIcons" key={index}>
+            <div style={{ display: 'flex', backgroundColor: '#0F0F0F',alignItems:'center' }}>
+              <div className="icon"><img src={item.Imagen}></img></div>
+              <div className="nameHamb"><h2>{item.Nome}</h2></div>
+              <div style={{textAlign:'justify', marginRight:'5%'}}><p>Recheios: {item.Recheios.length}</p></div>
+              <div><button className="btn" onClick={() => handleToggleMenu(item.itemId)}>Ver</button></div>
+              <button className="btndel" onClick={() => handleDeleteItem(item.itemId)}>-</button>
+          </div>  
+          
+          {
+            openMenus[item.itemId] &&
+              <ul className="RechCart">
+                {item.Recheios.map(item =>
+                  <li>{item}</li>
+                )}
+              </ul>
+          }
+          < ul className = "RechCartQTD" >
+            <li >Quantidade: {item.quantity}</li>
+          </ul>
           </div>
-
         )}
-
-
-
-      </div>
     </div>
+    <div style={{textAlign:'end', marginRight:"15px"}}>
+      <h2>Total: {totalPrice}</h2>
+    </div>
+    {
+      cart.length > 0 &&
+      <div className="btnClear">
+        <button className="btn" onClick={removeAll}>Limpar itens</button>
+      </div>
+    }
+
+
+      </div >
+    </div >
   );
 };
 
