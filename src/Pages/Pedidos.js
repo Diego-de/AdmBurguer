@@ -76,18 +76,23 @@ const Pedido = () => {
       <div className="icon"><img src={logo}></img></div>
 
 
-
-      <div className="menu">
+      <div className="title">
         <h1>Menu</h1>
+      </div>
+      <div className="buttonOfFind">
+        <button>Normal</button>
+        <button>Combos</button>
+        <button>Regrigerante</button>
+        <button>Batata fritas</button>
+      </div>
+      <div className="menu">
         {Produto.map((hamburguer, index) =>
-
-
           <div key={index} >
             <React.Fragment key={hamburguer.id}>
 
               <div className="Burguers">
                 <div className="icon"><img src={hamburguer.Imagen}></img></div>
-                <div className="nameHamb"><h2>{hamburguer.Nome}</h2></div>
+                <div className="nameHamb"><h2>{hamburguer.Nome}</h2></div> 
                 <div key={index}> <button onClick={() => handleToggleMenu(hamburguer.id)} className="btn">Opções:</button></div>
               </div>
 
@@ -115,8 +120,7 @@ const Pedido = () => {
                         <div><button style={{ backgroundColor: '#51E938' }} onClick={sum} >+</button></div>
                         <div><input type='text' id="quantity" value={Contador} /></div>
                         <div><button style={{ backgroundColor: 'red' }} onClick={sub}  >-</button></div>
-                      </div>
-
+                      </div>       
                       <div className='btn2' >
                         <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, hamburguer.Preço, hamburguer.id, parseInt(document.getElementById('quantity').value, 10) || 1)} >Guardar</button></div>
                       </div>
