@@ -5,11 +5,12 @@ import logo from '../assets/logo.svg'
 import Produto from "./ArrayPedidos";
 import { CartContext } from "./CarrinhoContext/cartContex";
 import { v4 as uuidv4 } from 'uuid';
-import { textAlign } from "@mui/system";
+import * as XLSX from 'xlsx';
+
 
 const Pedido = () => {
   const [cart, setCart] = useContext(CartContext)
-
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   //PEGANDO RECHEIO ATRIBUINDO NO UseStore do EASY-PEASY
   const [isChecked, setIsChecked] = useState([]);
@@ -50,10 +51,10 @@ const Pedido = () => {
 
 
 
-  const handleSave = (dataName, dataImage, recheio, preço, idHamburguer, quantidade) => {
+  const handleSave = (dataName, dataImage,dataImage2, recheio, preço, idHamburguer, quantidade) => {
 
     const combinacao = dataName + ' com ' + recheio;
-    const hamburguer = { Id: idHamburguer, itemId: uuidv4(), Nome: dataName, Imagen: dataImage, Recheios: recheio, combinacao, price: preço, quantity: quantidade };
+    const hamburguer = { Id: idHamburguer, itemId: uuidv4(), Nome: dataName, Imagen: dataImage,Imagen2:dataImage2, Recheios: recheio, combinacao, price: preço, quantity: quantidade };
     const itemIndex = cart.findIndex(item => item.combinacao === combinacao);
 
     if (itemIndex > -1) {
@@ -74,24 +75,28 @@ const Pedido = () => {
   return (
     <div className="container" id="opt1" >
       <div className="icon"><img src={logo}></img></div>
-
-
       <div className="title">
         <h1>Menu</h1>
       </div>
       <div className="buttonOfFind">
-        <button>Normal</button>
-        <button>Combos</button>
-        <button>Regrigerante</button>
-        <button>Batata fritas</button>
+        <button onClick={() => setSelectedCategory("Normal")}>Todos</button>
+        <button onClick={() => setSelectedCategory("Combo")}>Combos</button>
+        <button onClick={() => setSelectedCategory("refrigerante")}>Refrigerante</button>
+        <button onClick={() => setSelectedCategory("fries")}>Batata fritas</button>
       </div>
       <div className="menu">
-        {Produto.map((hamburguer, index) =>
+
+        {Produto
+          .filter((hamburguer) => selectedCategory ? hamburguer.category === selectedCategory : true)
+          .map((hamburguer, index) =>
           <div key={index} >
             <React.Fragment key={hamburguer.id}>
 
               <div className="Burguers">
-                <div className="icon"><img src={hamburguer.Imagen}></img></div>
+                <div className="icon">
+                  <img src={hamburguer.Imagen}></img>
+                  <img src={hamburguer.Imagen2}></img>
+                  </div>
                 <div className="nameHamb"><h2>{hamburguer.Nome}</h2></div> 
                 <div key={index}> <button onClick={() => handleToggleMenu(hamburguer.id)} className="btn">Opções:</button></div>
               </div>
@@ -122,7 +127,7 @@ const Pedido = () => {
                         <div><button style={{ backgroundColor: 'red' }} onClick={sub}  >-</button></div>
                       </div>       
                       <div className='btn2' >
-                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen, isChecked, hamburguer.Preço, hamburguer.id, parseInt(document.getElementById('quantity').value, 10) || 1)} >Guardar</button></div>
+                        <div><button className='btn' onClick={() => handleSave(hamburguer.Nome, hamburguer.Imagen,hamburguer.Imagen2, isChecked, hamburguer.Preço, hamburguer.id, parseInt(document.getElementById('quantity').value, 10) || 1)} >Guardar</button></div>
                       </div>
                     </div>
                   </div>
@@ -170,9 +175,44 @@ const Carrinho = () => {
     }
   }
 
+
+  let workbook = null;
+  
+  const downloadXLSX = (filename) => {
+
+    const selectedData = cart.map(item => ({
+      Nome: item.Nome,
+      Recheios: item.Recheios.join(", "),
+      Quantidade: item.quantity,
+      Preço: item.quantity * item.price,
+    }));
+  
+    selectedData.push({
+      "Preço total": totalPrice,
+    });
+  
+    const worksheet = XLSX.utils.json_to_sheet(selectedData);
+  
+    if (workbook) {
+      // Workbook já foi criado, então adiciona a planilha ao workbook existente
+      XLSX.utils.book_append_sheet(workbook, worksheet, "carrinho");
+      XLSX.writeFile(workbook, filename);
+    } else {
+      // Workbook não foi criado, então cria um novo workbook e adiciona a planilha
+      workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "carrinho");
+      XLSX.writeFile(workbook, filename);
+    }
+  };
+
   const removeAll = () => {
     setCart([]);
   }
+
+
+
+
+
 
 
 
@@ -184,7 +224,10 @@ const Carrinho = () => {
         {cart.map((item, index) =>
           <div className="cartIcons" key={index}>
             <div style={{ display: 'flex', backgroundColor: '#0F0F0F',alignItems:'center' }}>
-              <div className="icon"><img src={item.Imagen}></img></div>
+              <div className="icon">
+                <img src={item.Imagen}></img>
+                <img src={item.Imagen2}></img>
+                </div>
               <div className="nameHamb"><h2>{item.Nome}</h2></div>
               <div style={{textAlign:'justify', marginRight:'5%'}}><p>Recheios: {item.Recheios.length}</p></div>
               <div><button className="btn" onClick={() => handleToggleMenu(item.itemId)}>Ver</button></div>
@@ -212,9 +255,9 @@ const Carrinho = () => {
       cart.length > 0 &&
       <div className="btnClear">
         <button className="btn" onClick={removeAll}>Limpar itens</button>
+        <button className="btn" onClick={() => downloadXLSX("Relatório.xlsx")}>Exportar para CSV</button>
       </div>
     }
-
 
       </div >
     </div >
