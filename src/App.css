@@ -32,7 +32,99 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.MenuList {
+  width: 60%;
+}
+
+.Pc {
+  width: 39%;
+}
+
+#device {
+  display: none;
+}
+
+.menuDevice {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  height: 100vh;
+  background-color: #000000;
+  opacity: 97%;
+  overflow: scroll
+
+}
+
+.menuDevice h2{
+  color: #B6EAC2;
+}
+
+.titleDevice{
+  background-color: #000000;
+  text-align: center;
+  position: relative;
+}
+
+.titleDevice .btnClose{
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: -20px;
+  width: 30px;
+  height: 25px;
+}
+
+
+.titleDevice h1{
+  color: #F9D009;
+}
+
+
+@media (max-width: 900px) {
+
+  .Pc {
+    display: none;
+  }
+
+  #device {
+    position: fixed;
+    width: 100%;
+    height: 95vh;
+  }
+
+
+  .title{
+    position: relative;
+    padding-bottom: 3%;
+  }
+
+  .title .btnClose{
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 30px;
+    margin-top: 10px;
+  }
+
+  .btnClear{
+    position: relative;
+    margin-top: -50px;
+    margin-bottom: 5%;
+  }
+  
+
+  .MenuList {
+    width: 100%;
+  }
+
+  
+
+
 }

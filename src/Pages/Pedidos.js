@@ -6,6 +6,7 @@ import Produto from "./ArrayPedidos";
 import { CartContext } from "./CarrinhoContext/cartContex";
 import { v4 as uuidv4 } from 'uuid';
 import * as XLSX from 'xlsx';
+import { CgFileDocument } from "react-icons/cg";
 
 
 const Pedido = () => {
@@ -37,7 +38,7 @@ const Pedido = () => {
     // Verifica se o adicional já está no estado
     const existingItem = adicional.find(item => item.Nome === hamb.Adicionais[id].Nome);
     if (existingItem) {
-      const updatedItem = { ...existingItem, Quantidade: existingItem.Quantidade + 1};
+      const updatedItem = { ...existingItem, Quantidade: existingItem.Quantidade + 1 };
       hamb.Adicionais[id] = { ...hamb.Adicionais[id], quantidade: updatedItem.Quantidade };
       const updatedAdicional = adicional.map(item => item.Nome === updatedItem.Nome ? updatedItem : item);
       setAdicional(updatedAdicional);
@@ -58,12 +59,12 @@ const Pedido = () => {
 
     const existingItem = adicional.find(item => item.Nome === hamb.Adicionais[id].Nome);
 
-    if (existingItem && existingItem.Quantidade > 0 ) {
+    if (existingItem && existingItem.Quantidade > 0) {
       const updatedItem = { ...existingItem, Quantidade: existingItem.Quantidade - 1 };
       hamb.Adicionais[id] = { ...hamb.Adicionais[id], quantidade: updatedItem.Quantidade };
       const updatedAdicional = adicional.map(item => item.Nome === updatedItem.Nome ? updatedItem : item);
       setAdicional(updatedAdicional);
-  
+
       if (updatedItem.Quantidade === 0) {
         // Remove o adicional do estado
         const filteredAdicional = adicional.filter(item => item.Nome !== updatedItem.Nome);
@@ -110,8 +111,8 @@ const Pedido = () => {
     const combinacao = dataName + ' com ' + recheio;
     const hamburguer = { Id: idHamburguer, itemId: uuidv4(), Nome: dataName, Imagen: dataImage, Imagen2: dataImage2, Recheios: recheio, combinacao, price: totalPrice, quantity: quantidade, Adicionais: ADC };
     const itemIndex = cart.findIndex(item => item.combinacao === combinacao && JSON.stringify(item.Adicionais) === JSON.stringify(ADC));
-   
-    
+
+
 
     if (itemIndex > -1) {
       const newItem = [...cart];
@@ -126,12 +127,19 @@ const Pedido = () => {
 
 
 
+  const VerCart = () => {
+    document.getElementById('device').style.display = "block";
+  }
+
+
   return (
     <div className="container" id="opt1" >
       <div className="icon"><img src={logo}></img></div>
       <div className="title">
         <h1>Menu</h1>
+        <button onClick={VerCart} className="btnClose" style={{ backgroundColor: '#498D58', color: '#B6EAC2' }}><CgFileDocument size={20} />{cart.length}</button>
       </div>
+
       <div className="buttonOfFind">
         <button onClick={() => setSelectedCategory("Normal")}>Todos</button>
         <button onClick={() => setSelectedCategory("Combo")}>Combos</button>
@@ -269,7 +277,7 @@ const Carrinho = () => {
       Nome: item.Nome,
       Recheios: item.Recheios.join(", "),
       Quantidade: item.quantity,
-      Adicionais: item.Adicionais.map(item =>{
+      Adicionais: item.Adicionais.map(item => {
         return item.Nome
       }).join(", "),
       Preço: item.quantity * item.price,
@@ -294,20 +302,18 @@ const Carrinho = () => {
   };
 
   const removeAll = () => {
-    setCart([]);
+    if (window.confirm("Tem certeza?")) {
+      setCart([]);
+    }
   }
-
-
-
-
-
-
 
 
   return (
     <div className="container" id="opt2">
       <div className="menu2">
-        <h1>Relatório</h1>
+        <div className="title">
+          <h1>Relatório</h1>
+        </div>
         <div className="BurguerCart" >
           {cart.map((item, index) =>
             <div className="cartIcons" key={index}>
@@ -329,14 +335,14 @@ const Carrinho = () => {
                 openMenus[item.itemId] &&
                 <ul className="RechCart">
                   <div style={{ width: "100%", display: "flex" }}>
-                    <div style={{ width: "50%"}}>
-                      <p style={{color:'yellow'}}>Recheios</p>
+                    <div style={{ width: "50%" }}>
+                      <p style={{ color: 'yellow' }}>Recheios</p>
                       {item.Recheios.map(item =>
                         <li>{item}</li>
                       )}
                     </div>
                     <div style={{ width: "50%" }}>
-                      <p style={{color:'yellow'}}>Adicionais</p>
+                      <p style={{ color: 'yellow' }}>Adicionais</p>
                       {item.Adicionais.map(item =>
                         <li>
                           {item.Nome} = {item.Quantidade}

@@ -7,6 +7,21 @@
     overflow: scroll
 }
 
+.menu2{
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+    height: 95vh;
+    background-color: #000000;
+    opacity: 97%;
+    overflow: scroll
+}
+
+.menu2 h2{
+    color: #B6EAC2;
+}
+
+
 .title{
     background-color: #000000;
     text-align: center;
@@ -44,13 +59,7 @@
     transform: scale(1.05);
 }
 
-.menu2{
-    text-align: center;
-    width: 100%;
-    height: 95vh;
-    background-color: #000000;
-    opacity: 97%;
-}
+
 
 .btn1:hover{
     border-bottom: solid;
@@ -164,13 +173,6 @@
 
 
 
-
-
-
-.menu2 h2{
-    color: #B6EAC2;
-}
-
 .BurguerCart{
     display: inline;
     color: #F9D009 ;
@@ -219,6 +221,7 @@
     margin-top: -6px;
     margin-right: 5px;
 }
+
 
 
 
