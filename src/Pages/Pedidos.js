@@ -290,11 +290,11 @@ const Carrinho = () => {
     const worksheet = XLSX.utils.json_to_sheet(selectedData);
 
     if (workbook) {
-      // Workbook já foi criado, então adiciona a planilha ao workbook existente
+      
       XLSX.utils.book_append_sheet(workbook, worksheet, "carrinho");
       XLSX.writeFile(workbook, filename);
     } else {
-      // Workbook não foi criado, então cria um novo workbook e adiciona a planilha
+      
       workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "carrinho");
       XLSX.writeFile(workbook, filename);
